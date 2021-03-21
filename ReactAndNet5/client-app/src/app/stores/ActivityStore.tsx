@@ -2,7 +2,7 @@
 import { makeAutoObservable, runInAction } from "mobx"
 import agent from "../api/agent";
 import { IActivity } from "../modals/activity"
-import {v4 as uuid} from 'uuid';
+// import {v4 as uuid} from 'uuid';
 export default class ActivityStore{
     title='Hello from mobx store'
     // activities : IActivity [] =[];
@@ -13,11 +13,23 @@ export default class ActivityStore{
     loadingInitial = true;
 
     constructor(){
-        // makeObservable(this, {
-        //     title:observable,
-        //     setTitle : action
-        // })
         makeAutoObservable(this)
+    }
+
+    loadActivity = async (id:string) =>{
+      let  activity = this.activitiesRegistry.get(id);
+      if(activity){
+          this.selectedActivity = activity;
+          this.setLoadingInitial(false)
+          return activity;
+      }
+      this.loadingInitial =true;
+      activity = await agent.Activities.details(id);
+      activity.date = activity.date.split('T')[0]
+      this.activitiesRegistry.set(activity.id, activity)
+      this.selectedActivity = activity;
+      this.setLoadingInitial(false)
+      return activity;
     }
 
     get activitiesByDate(){
@@ -25,7 +37,7 @@ export default class ActivityStore{
     }
 
     loadActivities = async () =>{
-        // this.setLoadingInitial(true)
+        this.setLoadingInitial(true)
         try{
             const activities = await agent.Activities.list();
             activities.forEach(activity =>{
@@ -45,27 +57,27 @@ export default class ActivityStore{
         this.loadingInitial = state
     }
 
-    selectActivity = (id:string) =>{
-        //    this.selectedActivity = this.activities.find(a => a.id === id)
-       this.selectedActivity = this.activitiesRegistry.get(id)
-    }
+    // selectActivity = (id:string) =>{
+    //     //    this.selectedActivity = this.activities.find(a => a.id === id)
+    //    this.selectedActivity = this.activitiesRegistry.get(id)
+    // }
 
-    cancelSelectedAcivity = () =>{
-        this.selectedActivity = undefined
-    }
+    // cancelSelectedAcivity = () =>{
+    //     this.selectedActivity = undefined
+    // }
 
-    openForm = (id?:string) =>{
-        id? this.selectActivity(id) : this.cancelSelectedAcivity()
-        this.editMode = true;
-    }
+    // openForm = (id?:string) =>{
+    //     id? this.selectActivity(id) : this.cancelSelectedAcivity()
+    //     this.editMode = true;
+    // }
 
-    closeForm = () =>{
-        this.editMode = false;
-    }
+    // closeForm = () =>{
+    //     this.editMode = false;
+    // }
 
     createActivity = async(activity:IActivity) =>{
         this.loading =true;
-        activity.id = uuid();
+        // activity.id = uuid();
         try {
             await agent.Activities.create(activity)
             runInAction(() =>{
