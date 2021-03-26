@@ -6,3 +6,4 @@ npm install uuid => package for installing uuid
 npm install mobx mobx-react-lite
 npm install @types/ react-router-dom
 npm install @types/react-router-dom --save-dev 
+npm install react-toastify for toast in react

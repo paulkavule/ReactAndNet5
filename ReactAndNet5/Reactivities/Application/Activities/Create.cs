@@ -1,6 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
+using ReactAndNet5.Reactivities.Application.Core;
 using ReactAndNet5.Reactivities.Domain;
 using ReactAndNet5.Reactivities.Persistance;
 
@@ -8,9 +10,18 @@ namespace ReactAndNet5.Reactivities.Application.Activities
 {
     public class Create
     {
-        public class Command : IRequest { public Activity Activity { get; set; } }
+        public class Command : IRequest<Result<Unit>> { 
+            public Activity Activity { get; set; }
+        }
 
-        public class Handler : IRequestHandler<Command>
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+               RuleFor(act => act.Activity).SetValidator(new ActivityValidator());
+            }
+        }
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _context;
             public Handler(DataContext context)
@@ -18,14 +29,16 @@ namespace ReactAndNet5.Reactivities.Application.Activities
                 this._context = context;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                  _context.Activities.Add(request.Activity);
 
-                await _context.SaveChangesAsync();
+               var result = await _context.SaveChangesAsync() > 0;
 
-                return Unit.Value;
+                if(!result) return Result<Unit>.Failed("Failed to create activity");
+                return Result<Unit>.Success(Unit.Value);
             }
+
         }
     }
 }

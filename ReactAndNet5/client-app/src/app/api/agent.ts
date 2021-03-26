@@ -1,5 +1,8 @@
-import axios, { AxiosResponse } from 'axios'
+import axios, { AxiosError, AxiosResponse } from 'axios'
+import { toast } from 'react-toastify'
+import { history } from '../..'
 import { IActivity } from '../modals/activity'
+import { store } from '../stores/store'
 
 axios.defaults.baseURL = "http://localhost:5000"
 axios.interceptors.response.use(async response =>{
@@ -7,9 +10,40 @@ axios.interceptors.response.use(async response =>{
         await sleep(1000)
         return response
     } catch (ee) {
-        console.log(ee)
+        // console.log('=>',ee)
         return await Promise.reject(ee)
     }
+ },(error: AxiosError) => {
+     const {data, status, config} = error.response!;
+    //  console.log(data)
+     switch(status){
+         case 400:
+            if(typeof data === 'string'){
+                toast.error('Bad Request');
+            }
+            if(config.method === "get" && data.errors.hasOwnProperty('id')){
+                history.push('/notfound')
+            }
+            if(data.errors){
+                let errorList = []
+                for(const key in data.errors){
+                   errorList.push(data.errors[key])
+                } 
+                throw errorList.flat();
+            }
+            break;
+         case 401:
+            toast.error('un authorized');
+            break;
+         case 404:
+            history.push('/notfound')
+            break;
+         case 500:
+            store.commonStore.setServerError(data)
+            history.push('/servererror')
+            break;
+     }
+     return Promise.reject(error)
  })
 const responseBody = <T>(response:AxiosResponse<T>) => response.data
 
