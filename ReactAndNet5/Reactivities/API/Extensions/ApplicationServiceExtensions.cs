@@ -6,6 +6,8 @@ using Microsoft.OpenApi.Models;
 using ReactAndNet5.Reactivities.Persistance;
 using ReactAndNet5.Reactivities.Application.Activities;
 using ReactAndNet5.Reactivities.Application.Core;
+using ReactAndNet5.Reactivities.Application.Interfaces;
+using ReactAndNet5.Reactivities.infrastructure.Security;
 
 namespace ReactAndNet5.Reactivities.API.Extensions
 {
@@ -25,6 +27,7 @@ namespace ReactAndNet5.Reactivities.API.Extensions
             });
             services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+            services.AddScoped<IUserAccessor, UserAccessor>();
             return services;
         }
         

@@ -46,9 +46,15 @@ namespace ReactAndNet5.Reactivities.API.Controllers
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
             if(await  _userManager.Users.AnyAsync(u => u.Email == registerDto.Email))
-               return BadRequest("Email Taken");
+            {
+                ModelState.AddModelError("Email", "Email Taken");
+                return ValidationProblem(ModelState);
+            }
             if(await  _userManager.Users.AnyAsync(u => u.UserName == registerDto.UserName))
-                return BadRequest("Email Taken");
+            { 
+                ModelState.AddModelError("Email", "Email Taken");
+                return ValidationProblem(ModelState);
+            }
 
             var user= new AppUser{
                 UserName = registerDto.UserName,

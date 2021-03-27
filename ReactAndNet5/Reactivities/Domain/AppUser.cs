@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
 namespace ReactAndNet5.Reactivities.Domain
@@ -6,5 +7,7 @@ namespace ReactAndNet5.Reactivities.Domain
     {
         public string DisplayName { get; set; } 
         public string Bios { get; set; }
+
+        public ICollection<ActivityAttendee> Activities {set;get;}
     }
 }

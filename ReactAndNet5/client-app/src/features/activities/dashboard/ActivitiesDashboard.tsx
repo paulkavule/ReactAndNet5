@@ -15,7 +15,7 @@ function ActivityDashBord(){
 
     }, [activitiesRegistry, activityStore]) // adding activity store as the dependency of useEffect
   
-    if(activityStore.loadingInitial) return <LoadingComponent content="loading app"/>
+    if(activityStore.loadingInitial) return <LoadingComponent content="Loading activities..."/>
 
     return(
         <Grid>

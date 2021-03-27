@@ -1,11 +1,13 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using ReactAndNet5.Reactivities.API.Services;
 using ReactAndNet5.Reactivities.Domain;
+using ReactAndNet5.Reactivities.infrastructure.Security;
 using ReactAndNet5.Reactivities.Persistance;
 
 namespace ReactAndNet5.Reactivities.API.Extensions
@@ -29,6 +31,12 @@ namespace ReactAndNet5.Reactivities.API.Extensions
                     ValidateAudience = false
                 };
             });
+            service.AddAuthorization(opt => {
+                opt.AddPolicy("IsActivityHost", policy =>{
+                    policy.Requirements.Add(new IsHostRequirement());
+                });
+            });
+            service.AddTransient<IAuthorizationHandler, IsHostRequirmentHandler>();
             service.AddScoped<TokenService>();
             return service;
         }

@@ -2,9 +2,18 @@ import axios, { AxiosError, AxiosResponse } from 'axios'
 import { toast } from 'react-toastify'
 import { history } from '../..'
 import { IActivity } from '../modals/activity'
+import { User, UserFormValues } from '../modals/user'
 import { store } from '../stores/store'
 
 axios.defaults.baseURL = "http://localhost:5000"
+
+axios.interceptors.request.use(config =>{
+    const token = store.commonStore.token;
+    console.log('interceptor', token)
+    if(token) config.headers.Authorization = `Bearer ${token}`
+    return config;
+})
+
 axios.interceptors.response.use(async response =>{
     try {
         await sleep(1000)
@@ -61,9 +70,14 @@ const Activities ={
     update:(activity:IActivity) =>requests.put<void>(`/Activities/${activity.id}`, activity),
     delete:(id:string) => requests.delete<void>(`/Activities/${id}`)
 }
-
+const Accounts = {
+    current: () =>requests.get<User>('/users/Account'),
+    login:(user:UserFormValues) =>requests.post<User>('/users/Account/login',user),
+    register:(user:UserFormValues) =>requests.post<User>('/users/Account/register', user)
+}
 const agent = {
-    Activities
+    Activities,
+    Accounts
 }
 
 const sleep = (delay : number) =>{

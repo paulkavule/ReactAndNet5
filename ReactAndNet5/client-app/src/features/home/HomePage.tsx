@@ -1,7 +1,12 @@
+import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
 import { Button, Container, Header, Image, Segment } from "semantic-ui-react";
+import { useStore } from "../../app/stores/store";
+import LoginForm from "../users/LoginForm";
+import RegisterUser from "../users/RegisterUser";
 
-export default function HomePage(){
+ function HomePage(){
+    const {userStore, modalStore} =  useStore()
     return (
         <Segment inverted vertical textAlign='center' className='masthead'>
             <Container text>
@@ -9,13 +14,20 @@ export default function HomePage(){
                     <Image size='massive' src='/assets/logo.png' alt='logo' style={{bottomMargin:12}}/>
                     ReactAndNet5
                 </Header>
-                <Header inverted as='h2' content='Welcome to ReactAndNet5' />
-                <Button as={Link} to='/activities' size='huge' inverted content='Activities'/>
+                {userStore.isLoggedIn ? (
+                   <>
+                   <Header inverted as='h2' content='Welcome to ReactAndNet5' />
+                    <Button as={Link} to='/activities' size='huge' inverted content='Go To Activities'/>
+                   </>
+                ):( <>
+                    <Button onClick={() => modalStore.openModal(<LoginForm/>)} size='huge' inverted content='Login'/>
+                    <Button onClick={() => modalStore.openModal(<RegisterUser />)} size='huge' inverted content='Register'/>
+                </>)}
+                
+              
             </Container>
         </Segment>
-        // <Container style={{marginTop:'7em'}}>
-        //     <h1>Home Page</h1>
-        //     <h3>Go to <Link to='/activities'>Activities</Link></h3>
-        // </Container>
     )
 }
+
+export default observer(HomePage)
