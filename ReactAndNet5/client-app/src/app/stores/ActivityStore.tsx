@@ -2,6 +2,7 @@
 import { makeAutoObservable, runInAction } from "mobx"
 import agent from "../api/agent";
 import { IActivity } from "../modals/activity"
+import {format} from 'date-fns'
 // import {v4 as uuid} from 'uuid';
 export default class ActivityStore{
     title='Hello from mobx store'
@@ -19,27 +20,26 @@ export default class ActivityStore{
     loadActivity = async (id:string) =>{
       let  activity = this.activitiesRegistry.get(id);
       if(activity){
-          this.selectedActivity = activity;
+          this.setSelectedActivity(activity);
           this.setLoadingInitial(false)
           return activity;
       }
       this.loadingInitial =true;
       activity = await agent.Activities.details(id);
-      activity.date = activity.date.split('T')[0]
       this.activitiesRegistry.set(activity.id, activity)
-      this.selectedActivity = activity;
+      this.setSelectedActivity(activity);
       this.setLoadingInitial(false)
       return activity;
     }
 
     get activitiesByDate(){
-        return Array.from(this.activitiesRegistry.values()).sort((a,b) => Date.parse(a.date) - Date.parse(b.date))
+        return Array.from(this.activitiesRegistry.values()).sort((a,b) => a.date!.getTime() - b.date!.getTime())
     }
 
     get groupedActivities(){
 
         let entries = Object.entries( this.activitiesByDate.reduce((activities, activity) =>{
-            const date = activity.date;
+            const date = format(activity.date!, 'dd MMMM yyyy')// .toISOString().split('T')[0];
             if(activities[date])
                 activities[date] = [...activities[date], activity]
             else
@@ -56,7 +56,7 @@ export default class ActivityStore{
         try{
             const activities = await agent.Activities.list();
             activities.forEach(activity =>{
-                activity.date = activity.date.split('T')[0]
+                activity.date = new Date(activity.date!) //activity.date.split('T')[0]
                 // this.activities.push(activity);
                 this.activitiesRegistry.set(activity.id, activity)
             })  
@@ -71,7 +71,9 @@ export default class ActivityStore{
     setLoadingInitial =(state:boolean) =>{
         this.loadingInitial = state
     }
-
+    setSelectedActivity = (activity:IActivity) =>{
+        this.selectedActivity = activity;
+    }
     // selectActivity = (id:string) =>{
     //     //    this.selectedActivity = this.activities.find(a => a.id === id)
     //    this.selectedActivity = this.activitiesRegistry.get(id)

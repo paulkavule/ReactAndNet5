@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ReactAndNet5.Reactivities.API.Controllers
 {
+    [AllowAnonymous]
     public class ActivitiesController : ApiBaseController
     {
         [HttpGet]
