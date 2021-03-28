@@ -8,6 +8,7 @@ using ReactAndNet5.Reactivities.Application.Activities;
 using ReactAndNet5.Reactivities.Application.Core;
 using ReactAndNet5.Reactivities.Application.Interfaces;
 using ReactAndNet5.Reactivities.infrastructure.Security;
+using ReactAndNet5.Reactivities.infrastructure.Photos;
 
 namespace ReactAndNet5.Reactivities.API.Extensions
 {
@@ -28,6 +29,8 @@ namespace ReactAndNet5.Reactivities.API.Extensions
             services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+            services.Configure<CloudinarySettings>(_config.GetSection("Cloudinary"));
             return services;
         }
         

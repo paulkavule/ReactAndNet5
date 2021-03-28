@@ -1,14 +1,10 @@
 using System;
 using System.Collections.Generic;
+using ReactAndNet5.Reactivities.Application.Profiles;
 
 namespace ReactAndNet5.Reactivities.Application.Activities
 {
-    public class Profile{
-        public string Username { get; set; }
-        public string DisplayName { get; set; }
-        public string Bio { get; set; }
-        public string Image { get; set; }
-    }
+  
     public class ActivityDto
     {
         
@@ -21,6 +17,6 @@ namespace ReactAndNet5.Reactivities.Application.Activities
         public string Venue {set;get;}
         public string HostUsername { get; set; }
         public bool IsCancelled { get; set; }
-        public ICollection<Profile> Attendees { get; set; }
+        public ICollection<AttendeeDto> Attendees { get; set; }
     }
 }

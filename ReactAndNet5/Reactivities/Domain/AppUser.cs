@@ -8,6 +8,7 @@ namespace ReactAndNet5.Reactivities.Domain
         public string DisplayName { get; set; } 
         public string Bios { get; set; }
 
+        public ICollection<Photo> Photos {get;set;}
         public ICollection<ActivityAttendee> Activities {set;get;}
     }
 }
