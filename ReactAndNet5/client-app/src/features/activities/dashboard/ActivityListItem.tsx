@@ -1,9 +1,11 @@
 import { SyntheticEvent, useState } from "react"
 import { Link } from "react-router-dom"
-import { Button, Icon, Item, Segment } from "semantic-ui-react"
+import { Button, Icon, Item, Label, Segment } from "semantic-ui-react"
 import { IActivity } from "../../../app/modals/activity"
 import { useStore } from "../../../app/stores/store"
 import {format} from 'date-fns'
+import ActivityAttendeeItem from "./ActivityAttendeeItem"
+import { observer } from "mobx-react-lite"
 interface Prop{
     activity : IActivity
 }
@@ -21,12 +23,39 @@ function ActivityListItem({activity}:Prop){
     return (
         <Segment.Group>
             <Segment>
+                {
+                    activity.isCancelled && (
+                        <Label content='Cancelled' 
+                            attached='top'
+                            color='red'
+                            style={{textAlign:'Center'}}
+                        />
+                    )
+                }
                 <Item.Group>
                     <Item>
-                        <Item.Image circular size='tiny' src='/assets/user.png'/>
+                        <Item.Image style={{marginBottom:3}} circular size='tiny' src='/assets/user.png'/>
                         <Item.Content>
                             <Item.Header as={Link} to={`/activities/${activity.id}`}> {activity.title} </Item.Header>
-                            <Item.Description>Hosted by Paul</Item.Description>
+                            <Item.Description>Hosted by {activity.host?.displayName}</Item.Description>
+                            {
+                                activity.isHost && (
+                                    <Item.Description>
+                                        <Label color='orange' basic>
+                                            Your are hosting this activity
+                                        </Label>
+                                    </Item.Description>
+                                )
+                            }
+                            {
+                                activity.isGoing && !activity.isHost && (
+                                    <Item.Description>
+                                        <Label color='green' basic>
+                                            Your are going to this activity
+                                        </Label>
+                                    </Item.Description>
+                                )
+                            }
                         </Item.Content>
                     </Item>
                 </Item.Group>
@@ -38,7 +67,7 @@ function ActivityListItem({activity}:Prop){
                 </span>
             </Segment>
             <Segment secondary>
-                List of attendies
+                <ActivityAttendeeItem attendees={activity.attendees!} />
             </Segment>
             <Segment clearing>
                 <span>{activity.description}</span>
@@ -68,4 +97,4 @@ function ActivityListItem({activity}:Prop){
     )
 }
 
-export default ActivityListItem
+export default observer(ActivityListItem) 

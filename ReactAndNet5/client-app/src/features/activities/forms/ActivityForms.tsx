@@ -13,24 +13,16 @@ import CustomTextArea from "../../../app/common/form/CustomTextArea";
 import CustomSelect from "../../../app/common/form/CustomSelect";
 import CustomDatePicker from "../../../app/common/form/CustomDatePicker";
 import { CategoryOptions } from "../../../app/common/options/category_options";
-import { IActivity } from "../../../app/modals/activity";
+import { ActivityFormValues } from "../../../app/modals/activity";
 function ActivityForm(){
     const {activityStore} = useStore()
-    const {loading, loadActivity, createActivity, updateActivity, loadingInitial,setLoadingInitial} = activityStore
+    const {loadActivity, createActivity, updateActivity, loadingInitial,setLoadingInitial} = activityStore
     const history = useHistory()
-    const [activity, setActivity] = useState<IActivity>({
-        id:'',
-        title:'',
-        category:'',
-        description:'',
-        date: null,
-        city:'',
-        venue:''
-    })
+    const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues())
     const {id} = useParams<{id:string}>();
     useEffect(()=>{
         if(id){
-           loadActivity(id).then(activity =>setActivity(activity!))
+           loadActivity(id).then(activity =>setActivity(new ActivityFormValues(activity)))
         }
         else{
             setLoadingInitial(false)
@@ -47,8 +39,8 @@ function ActivityForm(){
 
 
     })
-    function handleFormSubmit(activity:IActivity){
-       if(activity.id.length === 0){
+    function handleFormSubmit(activity:ActivityFormValues){
+       if(!activity.id){
            let newActivity = {...activity, id: uuid()}
            createActivity(newActivity).then(()=>{
             history.push(`/activities/${newActivity.id}`)
@@ -88,7 +80,7 @@ function ActivityForm(){
                        
                         <Button 
                         disabled={isSubmitting || !isValid || !dirty}
-                        loading={loading} type='Submit' floated='right' content='Submit' positive />
+                        loading={isSubmitting} type='Submit' floated='right' content='Submit' positive />
                         <Button type='button' floated='right' content='Cancel' as={Link} to='/activities' />
                     </Form>
                 )}

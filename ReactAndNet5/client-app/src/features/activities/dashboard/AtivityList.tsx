@@ -7,7 +7,6 @@ import ActivityListItem from "./ActivityListItem"
 function ActivityList(){
     const {activityStore} = useStore()
     const {groupedActivities: activities} = activityStore
-   
     return (
         <>
             {activities.map(([date, activities]) =>(
