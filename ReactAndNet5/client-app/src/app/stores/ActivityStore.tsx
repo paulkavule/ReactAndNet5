@@ -191,6 +191,9 @@ export default class ActivityStore{
         }
     }
     
+    cleareSelectedActivity = () =>{
+        this.selectedActivity = undefined;
+    }
     // setTitle = () =>{
     //     this.title = this.title+"!";
     // }

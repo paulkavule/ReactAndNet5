@@ -10,6 +10,7 @@ using FluentValidation.AspNetCore;
 using ReactAndNet5.Reactivities.API.Middleware;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using ReactAndNet5.Reactivities.API.SignalR;
 
 namespace API
 {
@@ -60,6 +61,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
             });
         }
     }

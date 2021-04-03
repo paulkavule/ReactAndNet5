@@ -15,6 +15,7 @@ import LoginForm from '../../features/users/LoginForm';
 import { useStore } from '../stores/store';
 import LoadingComponent from './LoadingComponent';
 import ModalContainer from '../common/modals/ModalContainer';
+import UserProfile from '../../features/profiles/UserProfile';
 
 function App() {
 
@@ -51,6 +52,7 @@ function App() {
                   <Route path='/login' component={LoginForm} />
                   <Route path='/errors' component={ErrorTesting} />
                   <Route path='/servererror' component={ServerError} />
+                  <Route path='/profiles/:username' component={UserProfile} />
                   <Route component={NotFound} />
                   
                 </Switch>

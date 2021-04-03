@@ -13,13 +13,14 @@ import ActivityDetailsInfo from "./ActivityDetailsInfo";
 
 function ActivityDetails(){
     const {activityStore} = useStore()
-    const {selectedActivity:activity, loadActivity, loadingInitial} = activityStore
+    const {selectedActivity:activity, loadActivity, loadingInitial, cleareSelectedActivity} = activityStore
     const {id} = useParams<{id:string}>()
 
     useEffect(() =>{
         // console.log(id)
         if(id) loadActivity(id)
-    },[id, loadActivity])
+        return () => cleareSelectedActivity();  
+    },[id, loadActivity, cleareSelectedActivity])
 
     if(loadingInitial || !activity) return <LoadingComponent/>;
 
@@ -28,7 +29,7 @@ function ActivityDetails(){
             <Grid.Column width='10'>
                 <ActivityDetailsHeader activity={activity} />
                 <ActivityDetailsInfo activity={activity} />
-                <ActivityDetailsChat />
+                <ActivityDetailsChat activityId={activity.id} />
             </Grid.Column>
             <Grid.Column width='6'>
                 <ActivityDetailsSideBar activity={activity} />

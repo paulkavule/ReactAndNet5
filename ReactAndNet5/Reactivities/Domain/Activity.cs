@@ -14,5 +14,6 @@ namespace ReactAndNet5.Reactivities.Domain
         public string Venue {set;get;}
         public bool IsCancelled { get; set; }
         public ICollection<ActivityAttendee> Attendees {set;get;} = new List<ActivityAttendee>();
+        public ICollection<Comment> Comment {set;get;} = new List<Comment>();
     }
 }

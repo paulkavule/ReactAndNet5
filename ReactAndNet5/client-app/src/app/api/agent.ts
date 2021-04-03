@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios'
 import { toast } from 'react-toastify'
 import { history } from '../..'
 import { ActivityFormValues, IActivity } from '../modals/activity'
+import { Photo, Profile } from '../modals/profile'
 import { User, UserFormValues } from '../modals/user'
 import { store } from '../stores/store'
 
@@ -9,7 +10,7 @@ axios.defaults.baseURL = "http://localhost:5000"
 
 axios.interceptors.request.use(config =>{
     const token = store.commonStore.token;
-    console.log('interceptor', token)
+    // console.log('interceptor', token)
     if(token) config.headers.Authorization = `Bearer ${token}`
     return config;
 })
@@ -76,9 +77,23 @@ const Accounts = {
     login:(user:UserFormValues) =>requests.post<User>('/users/Account/login',user),
     register:(user:UserFormValues) =>requests.post<User>('/users/Account/register', user)
 }
+
+const Profiles = {
+    get: (username:string) => requests.get<Profile>(`/Profiles/${username}`),
+    uploadPhoto:(file:Blob) => {
+        let formData = new FormData();
+        formData.append('File', file);
+        return axios.post<Photo>('/Photo', formData,{
+            headers:{'content-type':'multipart/form-data'}
+        })
+    },
+    setMainPhoto: (id:string)=>requests.post<void>(`/setmain/${id}`,{}),
+    deletePhoto: (id:string)=>requests.delete<void>(`/Photo/${id}`)
+}
 const agent = {
     Activities,
-    Accounts
+    Accounts,
+    Profiles
 }
 
 const sleep = (delay : number) =>{

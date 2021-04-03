@@ -22,7 +22,7 @@ import { useStore } from "../stores/store";
                     <Image src={user?.image || '/assets/user.png'} spaced='right' avatar />
                     <Dropdown pointing='top left' text={user?.displayName}>
                         <Dropdown.Menu>
-                            <Dropdown.Item as={NavLink} to={`/profile/${user?.userName}`} 
+                            <Dropdown.Item as={NavLink} to={`/profiles/${user?.userName}`} 
                             text='My profile' icon='user' />
                             <Dropdown.Item onClick={logout} text='Logout' icon='power'/>
                     

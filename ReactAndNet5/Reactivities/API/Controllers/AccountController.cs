@@ -75,7 +75,7 @@ namespace ReactAndNet5.Reactivities.API.Controllers
         {
            var user = await _userManager.Users.Include(u => u.Photos).
            FirstOrDefaultAsync(u =>u.Email == User.FindFirstValue(ClaimTypes.Email));
-
+        
            return CreateUser(user);
         }
 
@@ -84,7 +84,7 @@ namespace ReactAndNet5.Reactivities.API.Controllers
             return new UserDto
             {   
                 DisplayName = user.DisplayName,
-                Image = user.Photos?.FirstOrDefault(uu => uu.IsMain)?.Url,
+                Image = user?.Photos?.FirstOrDefault(uu => uu.IsMain)?.Url,
                 Token = _tokenService.CreateToken(user),
                 UserName = user.UserName
             };

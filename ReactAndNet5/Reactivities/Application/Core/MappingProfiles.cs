@@ -1,6 +1,7 @@
 using System.Linq;
 using AutoMapper;
 using ReactAndNet5.Reactivities.Application.Activities;
+using ReactAndNet5.Reactivities.Application.Comments;
 using ReactAndNet5.Reactivities.Domain;
 
 namespace ReactAndNet5.Reactivities.Application.Core
@@ -23,6 +24,12 @@ namespace ReactAndNet5.Reactivities.Application.Core
 
             CreateMap<AppUser, Profiles.Profile>().ForMember(u => u.Image, o => 
             o.MapFrom(p => p.Photos.FirstOrDefault(pp  => pp.IsMain).Url));
+
+
+            CreateMap<Comment,  CommentDto>()
+            .ForMember(a => a.DisplayName, o => o.MapFrom(s => s.CreatedBy.DisplayName))
+            .ForMember(a => a.UserName, o => o.MapFrom(s => s.CreatedBy.UserName))
+            .ForMember(a => a.Image, o =>o.MapFrom(u => u.CreatedBy.Photos.FirstOrDefault(p => p.IsMain).Url));
         }
     }
 }

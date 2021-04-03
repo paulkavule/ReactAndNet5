@@ -9,6 +9,7 @@ namespace ReactAndNet5.Reactivities.Persistance
         public DbSet<Activity> Activities { get; set; }
         public DbSet<ActivityAttendee> ActivityAttendees { get; set; }
         public DbSet<Photo> Photos { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -25,6 +26,11 @@ namespace ReactAndNet5.Reactivities.Persistance
             .HasOne(u => u.Activty)
             .WithMany(a => a.Attendees)
             .HasForeignKey(aa => aa.ActivityId);
+
+            builder.Entity<Comment>()
+            .HasOne(rel => rel.Activity)
+            .WithMany(rel => rel.Comment)
+            .OnDelete(DeleteBehavior.Cascade);
 
 
         }
