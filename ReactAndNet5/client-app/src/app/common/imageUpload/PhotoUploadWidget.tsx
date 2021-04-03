@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Grid, Header, Image } from "semantic-ui-react";
+import { Button, Grid, Header } from "semantic-ui-react";
 import FileUpload from "./FileUpload";
 import PhotoCropper from "./PhotoCropper";
 // import { Cropper } from "react-cropper"

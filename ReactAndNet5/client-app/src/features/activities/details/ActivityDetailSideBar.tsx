@@ -38,9 +38,13 @@ function ActivityDetailsSideBar({activity: {attendees, host}}:Props){
                                 <Image size='tiny' src={ att.image || '/assets/user.png'} />
                                 <Item.Content verticalAlign='middle'>
                                     <Item.Header as='h3'>
+
                                         <Link to={`/profile/${att.username}`}>{att.displayName}</Link>
                                     </Item.Header>
-                                    <Item.Extra style={{ color: 'orange' }}>Following</Item.Extra>
+                                    {
+                                        att.following &&  <Item.Extra style={{ color: 'orange' }}>Following</Item.Extra>
+                                    }
+                                   
                                 </Item.Content>
                             </Item>
 

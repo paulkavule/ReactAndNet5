@@ -6,6 +6,7 @@ using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ReactAndNet5.Reactivities.Application.Core;
+using ReactAndNet5.Reactivities.Application.Interfaces;
 using ReactAndNet5.Reactivities.Domain;
 using ReactAndNet5.Reactivities.Persistance;
 
@@ -22,8 +23,10 @@ namespace ReactAndNet5.Reactivities.Application.Activities
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
-            public Handler(DataContext context, IMapper mapper)
+            private readonly IUserAccessor _accessor;
+            public Handler(DataContext context, IMapper mapper, IUserAccessor accessor)
             {
+                this._accessor = accessor;
                 this._mapper = mapper;
                 this._context = context;
             }
@@ -31,8 +34,8 @@ namespace ReactAndNet5.Reactivities.Application.Activities
             public async Task<Result<ActivityDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var activity = await _context.Activities
-                .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(ac => ac.Id  == request.Id);
+                .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider,new {currentUsername = _accessor.GetUserName()})
+                .FirstOrDefaultAsync(ac => ac.Id == request.Id);
                 return Result<ActivityDto>.Success(activity);
             }
         }

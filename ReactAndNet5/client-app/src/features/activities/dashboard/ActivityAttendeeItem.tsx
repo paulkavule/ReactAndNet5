@@ -9,7 +9,10 @@ interface Props {
     attendees : Profile[]
 }
 function ActivityAttendeeItem({attendees}:Props){
-
+    const styles = {
+        borderColor: 'orange',
+        borderWidth: 2
+    }
     return (
         <List horizontal>
             {
@@ -18,7 +21,9 @@ function ActivityAttendeeItem({attendees}:Props){
                     key={att.username} 
                     trigger={
                         <List.Item key={att.username} as={Link} to={`/profiles/${att.username}`}>
-                            <Image size='mini' circular src ={att.image || '/assets/user.png'} />
+                            <Image size='mini' circular src ={att.image || '/assets/user.png'} 
+                            bordered 
+                            style = {att.following?  styles:null } />
                         </List.Item>
                     }
                     >
